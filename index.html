@@ -1,13 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>ft_onion</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adivina el número</title>
 </head>
+
 <body>
-	<h1>Esto es una cebolla</h1>
-	<footer>By Clarette</footer>
+    <header>
+        <h1>Adivina el número</h1>
+    </header>
+    <main>
+        <form>
+            <label for="number">
+				Introduce un número
+				<input type="number" name="number" id="number" class="input_number">
+			</label>
+            <div class="buttons_wrapper">
+                <button class="test_button">Prueba</button>
+                <button class="restart_button">Reiniciar</button>
+            </div>
+            <p class="feedback"></p>
+        </form>
+    </main>
+    <footer>By Clarette</footer>
+    <script>
+        let inputElement = document.queryselector(".input_number");
+        let testButtonElement = document.queryselector(".test_button");
+        let restartButtonElement = document.queryselector(".restart_button");
+        let feedbackElement = document.queryselector(".feedback");
+        let inputValue = inputElement.value;
+
+        const getRandomNumber = () => Math.ceil(Math.random() * 100);
+        const setFeedbackMessage = (number, randomNumber) => {
+            let feedback = 'DEFAULT';
+
+            if (number === randomNumber) {
+                feedback = 'WINNER'
+            } else if (number > 100 && number < 0) {
+                feedback = 'UNVALID'
+            } else if (number > randomNumber) {
+                feedback = 'HIGHER'
+            } else if (number < randomNumber) {
+                feedback = 'LOWER'
+            } else {
+                feedback = 'DEFAULT'
+            };
+
+            const numberStatus = {
+                UNVALID: () => `${number} no es un número válido.`,
+                WINNER: () => `¡${number} es el número ganador!`,
+                LOWER: () => `${number} es un número muy bajo.`,
+                HIGHER: () => `${number} es un número muy alto.`,
+                DEFAULT: () => "Introduce un número entre el 1 y el 100."
+            }
+            return feedbackElement.textContent(numberStatus[feedback]());
+        }
+
+        const handleTestClick = () => setFeedbackMessage(inputValue, getRandomNumber());
+
+        testButtonElement.addEventListener('click', handleTestClick);
+    </script>
 </body>
+
 </html>
