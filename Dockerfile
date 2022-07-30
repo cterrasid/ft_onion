@@ -1,16 +1,28 @@
 #syntax=docker/dockerfile:1
 # Set the ubuntu filesystem
-FROM ubuntu:20.04
-# Update dependencies
-RUN apt-get update
-# Install nginx and ufw2 (firewall) and remove temp instalation files
-RUN apt-get install -y nginx \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-# Copy my custom nginx setup
-COPY nginx.conf /etc/nginx/nginx.conf
-# Copy my custom static page
-COPY index.html /usr/share/nginx/html/
-# Expose port 80
+FROM debian
+# Expose port 80 and port 4242
 EXPOSE 80
+EXPOSE 4242
+# Update & upgrade OS packages
+RUN apt update &&\
+	apt -y upgrade
+# Install nginx and remove temp instalation files
+RUN apt install -y nginx &&\
+apt install -y openssh-server &&\
+apt install -y tor
+# Copy my custom config files
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY index.html /usr/share/nginx/html/
+COPY torrc /etc/tor/torrc
+COPY sshd_config /etc/ssh/sshd_config
+
+RUN cd /etc/ssh && ssh-keygen -f user_ca
+RUN scp ~/.ssh/id_rsa_cterrasid.pub root@ft_onion:/etc/ssh/
+RUN ssh-keygen -s user_ca -I user_cterrasid -n cterrasid,root -V +52w id_rsa_cterrasid.pub
+RUN scp root@ft_onion:/etc/ssh/id_rsa_cterrasid-cert.pub ~/.ssh/
+RUN ssh -i ~/id_rsa_cterrasid-cert.pub root@ft_onion
+
+ENTRYPOINT nginx; service ssh start ; tor;
 # Command, IDK
 CMD ["nginx", "-g", "daemon off;"]
