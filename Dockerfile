@@ -1,5 +1,5 @@
 #syntax=docker/dockerfile:1
-# Set the ubuntu filesystem
+# Set the debian filesystem
 FROM debian
 # Expose port 80 and port 4242
 EXPOSE 80
@@ -23,6 +23,5 @@ RUN ssh-keygen -s user_ca -I user_cterrasid -n cterrasid,root -V +52w id_rsa_cte
 RUN scp root@ft_onion:/etc/ssh/id_rsa_cterrasid-cert.pub ~/.ssh/
 RUN ssh -i ~/id_rsa_cterrasid-cert.pub root@ft_onion
 
-ENTRYPOINT nginx; service ssh start ; tor;
 # Command, IDK
 CMD ["nginx", "-g", "daemon off;"]
