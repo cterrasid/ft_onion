@@ -1,0 +1,16 @@
+Port 4242
+Protocol 2
+PermitRootLogin no
+ListenAddress 127.0.0.1
+AllowUsers cterrasid
+MaxAuthTries 3
+LoginGraceTime 60
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+AllowAgentForwarding no
+AllowTcpForwarding no
+MaxStartups 1
+Ciphers aes128-ctr,aes256-ctr,arcfour256,arcfour,aes128-cbc,aes256-cbc
+X11forwarding no
+PermitEmptyPasswords no
+TrustedUserCaKeys /etc/ssh/user_ca.pub
